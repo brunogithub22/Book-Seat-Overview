@@ -62,16 +62,10 @@ export default function Navbar() {
           <div className="hidden lg:flex items-center gap-4">
             <ThemeToggle />
             <Link
-              href="/login"
+              href="/auth"
               className="text-sm text-cream-muted hover:text-cream transition-colors"
             >
-              Client login
-            </Link>
-            <Link
-              href="/contact"
-              className="flex items-center gap-2 rounded-sm bg-accent px-4 py-2 text-sm font-medium text-ink hover:bg-accent-hover transition-colors"
-            >
-              Request a demo
+              Sing in/up
             </Link>
           </div>
 
