@@ -2,6 +2,7 @@ import Link from "next/link";
 import { AuthShell } from "@/components/features/auth/AuthShell";
 import { Field } from "@/components/ui/form/Field";
 import { Button } from "@/components/ui/form/Button";
+import { signup } from "./action";
 
 export default function SignupPage() {
   return (
@@ -18,7 +19,7 @@ export default function SignupPage() {
         </p>
       }
     >
-      <form className="space-y-5">
+      <form action={signup} className="space-y-5">
         <div className="grid grid-cols-2 gap-4">
           <Field id="firstName" name="firstName" label="First name" placeholder="Ada" autoComplete="given-name" required />
           <Field id="lastName" name="lastName" label="Last name" placeholder="Lovelace" autoComplete="family-name" required />
