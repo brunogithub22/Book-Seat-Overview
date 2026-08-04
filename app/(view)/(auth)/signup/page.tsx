@@ -1,10 +1,36 @@
+"use client";
 import Link from "next/link";
 import { AuthShell } from "@/components/features/auth/AuthShell";
 import { Field } from "@/components/ui/form/Field";
 import { Button } from "@/components/ui/form/Button";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { signup } from "./action";
 
 export default function SignupPage() {
+
+  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(formData: FormData) {
+    setError(null);
+    setLoading(true);
+
+    try {
+      await signup({
+        email: formData.get("email") as string,
+        password: formData.get("password") as string,
+        firstName: formData.get("firstName") as string,
+        lastName: formData.get("lastName") as string,
+      });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <AuthShell
       eyebrow="New account"
@@ -19,7 +45,7 @@ export default function SignupPage() {
         </p>
       }
     >
-      <form action={signup} className="space-y-5">
+      <form action={handleSubmit} className="space-y-5">
         <div className="grid grid-cols-2 gap-4">
           <Field id="firstName" name="firstName" label="First name" placeholder="Ada" autoComplete="given-name" required />
           <Field id="lastName" name="lastName" label="Last name" placeholder="Lovelace" autoComplete="family-name" required />
@@ -51,7 +77,15 @@ export default function SignupPage() {
           </span>
         </label>
 
-        <Button type="submit">Create account</Button>
+        {error && (
+          <p role="alert" className="text-sm text-red-600">
+            {error}
+          </p>
+        )}
+
+        <Button type="submit" disabled={loading}>
+          {loading ? "Creating account..." : "Create account"}
+        </Button>
       </form>
     </AuthShell>
   );

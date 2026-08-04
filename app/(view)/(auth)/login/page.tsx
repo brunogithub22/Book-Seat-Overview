@@ -2,8 +2,33 @@ import Link from "next/link";
 import { AuthShell } from "@/components/features/auth/AuthShell";
 import { Field } from "@/components/ui/form/Field";
 import { Button } from "@/components/ui/form/Button";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { signin } from "./action";
+
 
 export default function LoginPage() {
+
+    const router = useRouter();
+    const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
+  
+    async function handleSubmit(formData: FormData) {
+      setError(null);
+      setLoading(true);
+  
+      try {
+        await signin({
+          email: formData.get("email") as string,
+          password: formData.get("password") as string
+        });
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Something went wrong");
+      } finally {
+        setLoading(false);
+      }
+    }
+
   return (
     <AuthShell
       eyebrow="Member sign in"
@@ -32,7 +57,15 @@ export default function LoginPage() {
           </Link>
         </div>
 
-        <Button type="submit">Enter the vault</Button>
+        {error && (
+          <p role="alert" className="text-sm text-red-600">
+            {error}
+          </p>
+        )}
+
+        <Button type="submit" disabled={loading}>
+          {loading ? "Signing in..." : "Sign in"}
+        </Button>
       </form>
     </AuthShell>
   );
