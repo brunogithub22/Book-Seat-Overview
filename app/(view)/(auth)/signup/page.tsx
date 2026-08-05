@@ -18,12 +18,15 @@ export default function SignupPage() {
     setLoading(true);
 
     try {
+      
       await signup({
         email: formData.get("email") as string,
         password: formData.get("password") as string,
         firstName: formData.get("firstName") as string,
         lastName: formData.get("lastName") as string,
       });
+      router.push("/dashboard");
+
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
@@ -32,6 +35,7 @@ export default function SignupPage() {
   }
 
   return (
+    <>
     <AuthShell
       eyebrow="New account"
       title="Open your ledger"
@@ -88,5 +92,26 @@ export default function SignupPage() {
         </Button>
       </form>
     </AuthShell>
+
+    {/* Loading Overlay Modal - Visible WHILE account is being created */}
+    {loading && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+        <div className="flex flex-col items-center justify-center rounded-2xl bg-white p-8 shadow-2xl text-center max-w-xs w-full mx-4">
+      
+        {/* Modern Gradient Spinner */}
+        <div className="relative flex items-center justify-center mb-4">
+          <div className="h-14 w-14 rounded-full border-4 border-slate-100 border-t-blue-600 border-r-blue-600 animate-spin" />
+        </div>
+
+        <h3 className="text-lg font-semibold text-gray-900 animate-pulse">
+          Creating your account...
+        </h3>
+        <p className="mt-1 text-xs text-gray-500">
+          Encrypting password & generating credentials
+        </p>
+      </div>
+    </div>
+   )}
+    </>
   );
 }
