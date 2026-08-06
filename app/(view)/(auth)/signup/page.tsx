@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/form/Button";
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { signup } from "./action";
+import ErrorToast from "@/components/features/auth/ErrorTost";
 
 export default function SignupPage() {
 
@@ -51,10 +52,10 @@ export default function SignupPage() {
     >
       <form action={handleSubmit} className="space-y-5">
         <div className="grid grid-cols-2 gap-4">
-          <Field id="firstName" name="firstName" label="First name" placeholder="Ada" autoComplete="given-name" required />
-          <Field id="lastName" name="lastName" label="Last name" placeholder="Lovelace" autoComplete="family-name" required />
+          <Field id="firstName" name="firstName" label="First name"  autoComplete="given-name" required />
+          <Field id="lastName" name="lastName" label="Last name"  autoComplete="family-name" required />
         </div>
-        <Field id="email" name="email" type="email" label="Email" placeholder="you@domain.com" autoComplete="email" required />
+        <Field id="email" name="email" type="email" label="Email" autoComplete="email" required />
         <Field
           id="password"
           name="password"
@@ -81,10 +82,14 @@ export default function SignupPage() {
           </span>
         </label>
 
+        <label className="flex items-center gap-2 text-ink-muted">
+          <input type="checkbox" name="remember" className="accent-accent" />
+          Remember me
+        </label>
+          
+
         {error && (
-          <p role="alert" className="text-sm text-red-600">
-            {error}
-          </p>
+          <ErrorToast message={error} onClose={() => setError(null)} duration={6000} />
         )}
 
         <Button type="submit" disabled={loading}>
