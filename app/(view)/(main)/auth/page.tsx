@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import AccountConfirmModal from "@/components/features/auth/AccountConfirm";
 
+
 interface AuthUser {
   id: string;
   email: string;
@@ -20,20 +21,33 @@ export default function HomePage() {
   async function handleClick() {
     setChecking(true);
 
-    const user = await fetch("/api/auth/checkAuth", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }).then((res) => res.json());
+    const res_AccessToken = await fetch("/api/auth/me", { method: "POST", credentials: "include" });
 
-    if (user) {
-      // sessione valida (o rinnovata col refresh) -> salta il signin
+    let user = null;
+
+    if(res_AccessToken.status === 200){
+      user = await res_AccessToken.json();
       setPendingUser(user);
-    } else {
-      // nessuna sessione valida -> serve login con password
+    }else if(res_AccessToken.status === 401){
+      const res_RefreshToken = await fetch("/api/auth/refresh", { method: "POST", credentials: "include" });
+      if(res_RefreshToken.status === 200){
+        user = await res_RefreshToken.json();
+        setPendingUser(user);
+      }else{
+        router.push("/login");
+      }
+    }else{
       router.push("/login");
     }
+
+
+    //if (user) {
+      // sessione valida (o rinnovata col refresh) -> salta il signin
+    //  setPendingUser(user);
+    //} else {
+      // nessuna sessione valida -> serve login con password
+    //  router.push("/login");
+    //}
 
     setChecking(false);
   }

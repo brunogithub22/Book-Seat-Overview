@@ -4,7 +4,7 @@ const nextConfig = {
     return [
       {
         source: "/api/:path*",
-        destination: "http://localhost/api/:path*", // nginx
+        destination: "http://localhost/api/:path*", // Rewrites to Nginx on port 80
       },
     ];
   },
