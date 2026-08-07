@@ -1,6 +1,39 @@
+"use client"
 import Link from "next/link";
+import { Button } from "@/components/ui/form/Button";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { checkAuth } from "@/lib/auth";
+import AccountConfirmModal from "@/components/features/auth/AccountConfirm";
+
+interface AuthUser {
+  id: string;
+  email: string;
+  name?: string;
+}
 
 export default function HomePage() {
+
+  const router = useRouter();
+  const [checking, setChecking] = useState(false);
+  const [pendingUser, setPendingUser] = useState<AuthUser | null>(null);
+
+  async function handleClick() {
+    setChecking(true);
+
+    const user = await checkAuth();
+
+    if (user) {
+      // sessione valida (o rinnovata col refresh) -> salta il signin
+      setPendingUser(user);
+    } else {
+      // nessuna sessione valida -> serve login con password
+      router.push("/login");
+    }
+
+    setChecking(false);
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Hero */}
@@ -25,12 +58,13 @@ export default function HomePage() {
               >
                 Create an account
               </Link>
-              <Link
-                href="/login"
+              <Button
+                onClick={handleClick}
+                disabled={checking}
                 className="text-sm font-medium text-leather underline underline-offset-4 hover:text-accent"
               >
-                Sign in to your ledger
-              </Link>
+                {checking ? "Checking session…" : "Sign in to your ledger"}
+              </Button>
             </div>
 
             <div className="mt-4 flex flex-wrap items-center gap-4">
@@ -80,6 +114,17 @@ export default function HomePage() {
           </div>
         </div>
       </main>
+
+      {pendingUser && (
+        <AccountConfirmModal
+          user={pendingUser}
+          onConfirm={() => router.push("/dashboard")}
+          onSwitchAccount={() => {
+            setPendingUser(null);
+            router.push("/login");
+          }}
+        />
+      )}
     </div>
   );
 }

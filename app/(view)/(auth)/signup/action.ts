@@ -1,6 +1,6 @@
 "use server";
 
-const API_BASE = process.env.API_URL || "http://localhost:8080";
+const API_BASE = "";
 
 export interface AuthResponse {
   token: string;
