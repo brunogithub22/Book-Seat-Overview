@@ -3,7 +3,6 @@ import Link from "next/link";
 import { Button } from "@/components/ui/form/Button";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { checkAuth } from "@/lib/auth";
 import AccountConfirmModal from "@/components/features/auth/AccountConfirm";
 
 interface AuthUser {
@@ -21,7 +20,12 @@ export default function HomePage() {
   async function handleClick() {
     setChecking(true);
 
-    const user = await checkAuth();
+    const user = await fetch("/api/auth/checkAuth", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((res) => res.json());
 
     if (user) {
       // sessione valida (o rinnovata col refresh) -> salta il signin
