@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 
-const API_BASE = "http://localhost:3000"; // Rewrites to Nginx on port 80
+const API_BASE = process.env.API_URL || "http://localhost:3000"; // Default to localhost if not set
 
 export interface AuthResponse {
   token: string;
