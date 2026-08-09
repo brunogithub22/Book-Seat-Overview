@@ -105,7 +105,7 @@ export default function Navbar() {
               );
             })}
             <Link
-              href="/login"
+              href="/auth"
               onClick={() => setMenuOpen(false)}
               className="mt-4 py-3 text-center text-sm text-cream-muted"
             >

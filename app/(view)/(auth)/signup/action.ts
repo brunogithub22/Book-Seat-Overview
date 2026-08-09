@@ -1,8 +1,4 @@
-"use server";
-
-import { cookies } from "next/headers";
-
-const API_BASE = process.env.API_URL || "http://localhost:3000"; // Default to localhost if not set
+"use client";
 
 export interface AuthResponse {
   token: string;
@@ -18,11 +14,12 @@ export interface SignUpPayload {
   password: string;
   firstName: string;
   lastName: string;
+  remember: boolean;
 }
 
 export async function signup(payload: SignUpPayload): Promise<AuthResponse> {
  
-  const res = await fetch(`${API_BASE}/api/auth/signup`, {
+  const res = await fetch("/api/auth/signup", {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -36,20 +33,7 @@ export async function signup(payload: SignUpPayload): Promise<AuthResponse> {
     throw new Error(error.message || `Signup failed with status ${res.status}`);
   }
 
-  // Read cookies from Go response
-  const setCookieHeaders = res.headers.getSetCookie(); // Node.js 18+
-  const cookieStore = await cookies();
-
-  for (const cookieStr of setCookieHeaders) {
-    if (cookieStr.includes("access_token")) {
-      const val = cookieStr.split(";")[0].split("=")[1];
-      cookieStore.set("access_token", val, { httpOnly: true, path: "/", secure: false });
-    }
-    if (cookieStr.includes("refresh_token")) {
-      const val = cookieStr.split(";")[0].split("=")[1];
-      cookieStore.set("refresh_token", val, { httpOnly: true, path: "/", secure: false });
-    }
-  }
+  
 
   return res.json();
 }

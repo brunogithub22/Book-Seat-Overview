@@ -48,10 +48,10 @@ export function AuthShell({
       {/* Form panel */}
       <div className="flex items-center justify-center px-6 py-16 sm:px-12">
         <div className="w-full max-w-md">
-          <div className="mb-10 flex items-center gap-3 lg:hidden">
+          <Link href="/" className="relative flex items-center gap-3">
             <BookOpen/>
-            <span className="font-display text-lg text-ink">Book&Seat</span>
-          </div>
+            <span className="font-display text-lg tracking-wide">Book&Seat</span>
+          </Link>
 
           <p className="text-xs tracking-[0.2em] uppercase text-leather mb-3">{eyebrow}</p>
           <h1 className="font-display text-3xl text-ink mb-2">{title}</h1>

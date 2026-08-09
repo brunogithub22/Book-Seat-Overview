@@ -2,6 +2,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 // Mock metric data
 const stats = [
@@ -22,6 +23,25 @@ const recentUsers = [
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('Overview');
+  const [isSigningOut, setIsSigningOut] = useState(false);
+  const router = useRouter();
+
+  async function handleSignOut() {
+    setIsSigningOut(true);
+    try {
+      await fetch("/api/auth/refresh/logout", {
+        method: 'POST',
+        credentials: 'include', // sends the httpOnly cookies so Go can revoke the session
+      });
+    } catch (err) {
+      console.error('Logout request failed', err);
+      // proceed with redirect anyway — cookies may already be cleared server-side,
+      // and staying on a protected page is worse than a failed best-effort call
+    } finally {
+      router.push('/login');
+      router.refresh(); // clears any cached RSC data for the now-logged-out state
+    }
+  }
 
   return (
     <div className="flex h-screen bg-gray-100 font-sans">
@@ -60,6 +80,14 @@ export default function AdminDashboard() {
               <p className="text-xs text-gray-400">admin@app.com</p>
             </div>
           </div>
+
+          <button
+            onClick={handleSignOut}
+            disabled={isSigningOut}
+            className="w-full flex items-center justify-center px-3 py-2 text-sm font-medium rounded-md text-gray-300 border border-slate-700 hover:bg-slate-800 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isSigningOut ? 'Signing out…' : 'Sign out'}
+          </button>
         </div>
       </aside>
 

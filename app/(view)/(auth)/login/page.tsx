@@ -22,7 +22,8 @@ export default function LoginPage() {
       try {
         await signin({
           email: formData.get("email") as string,
-          password: formData.get("password") as string
+          password: formData.get("password") as string,
+          remember: formData.get("remember") === "on"
         });
         router.push("/dashboard")
       } catch (err) {
