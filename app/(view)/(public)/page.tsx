@@ -1,6 +1,9 @@
+"use client"
 import Link from 'next/link';
 import { ArrowRight, BookMarked, ShieldCheck, LineChart, Users2 } from 'lucide-react';
 import {MainFooter} from '@/components/common/footer';
+import { CSRF_signin } from '../(auth)/login/action';
+import { useEffect } from 'react';
 
 
 const FEATURES = [
@@ -41,6 +44,25 @@ const STEPS = [
 ];
 
 function WelcomePage() {
+
+  useEffect(() => {
+    const run = async () => {
+      try {
+        await CSRF_signin();
+        const csrfToken = getCookie('csrf_token');
+  
+        if (csrfToken === null) {
+          throw new Error('Missing CSRF token — user may not be authenticated'); 
+        }
+        } catch (err) {
+          console.error('CSRF signin failed:', err);
+        }
+      
+    };
+    run();
+  }, []);
+    
+      
   return (
     <main className="bg-surface" style={{ fontFamily: 'var(--font-body, system-ui, sans-serif)' }}>
       {/* ---------- HERO ---------- */}
