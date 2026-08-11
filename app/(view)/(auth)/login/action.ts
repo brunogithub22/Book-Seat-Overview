@@ -1,5 +1,6 @@
 "use client";
 
+import {getCookie} from "@/utils/cookie"
 
 export interface AuthResponse {
   token: string;

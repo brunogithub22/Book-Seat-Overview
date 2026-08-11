@@ -8,7 +8,7 @@ export function proxy(request: NextRequest) {
   const preAuthtoken = request.cookies.get('pre_auth_token')?.value 
   console.log('Middleware: Checking access token for path:', pathname, 'Access Token:', accesstoken, 'Pre-Auth Token:', preAuthtoken)
 
-  if (pathname.startsWith('/dashboard') && (!accesstoken || !preAuthtoken)) {
+  if (pathname.startsWith('/dashboard') && (!accesstoken && !preAuthtoken)) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 }

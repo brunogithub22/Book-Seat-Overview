@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { ArrowRight, BookMarked, ShieldCheck, LineChart, Users2 } from 'lucide-react';
 import {MainFooter} from '@/components/common/footer';
 import { CSRF_signin } from '../(auth)/login/action';
+import {getCookie} from "@/utils/cookie"
 import { useEffect } from 'react';
 
 
