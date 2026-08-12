@@ -18,6 +18,10 @@ export default function HomePage() {
   const [checking, setChecking] = useState(false);
   const [pendingUser, setPendingUser] = useState<AuthUser | null>(null);
 
+  function googleSignIn(){
+    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/api/auth/google/signin`;
+  }
+
   async function handleClick() {
     setChecking(true);
 
@@ -39,15 +43,6 @@ export default function HomePage() {
     }else{
       router.push("/login");
     }
-
-
-    //if (user) {
-      // sessione valida (o rinnovata col refresh) -> salta il signin
-    //  setPendingUser(user);
-    //} else {
-      // nessuna sessione valida -> serve login con password
-    //  router.push("/login");
-    //}
 
     setChecking(false);
   }
@@ -87,6 +82,7 @@ export default function HomePage() {
 
             <div className="mt-4 flex flex-wrap items-center gap-4">
               <button
+                onClick={googleSignIn}
                 className="flex items-center gap-3 rounded-sm border border-border bg-surface px-6 py-3 text-ink font-medium text-ink transition-colors hover:border-leather hover:text-leather"
               >
                 <svg className="h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">

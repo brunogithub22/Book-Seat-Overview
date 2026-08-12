@@ -5,7 +5,7 @@ import { Field } from "@/components/ui/form/Field";
 import { Button } from "@/components/ui/form/Button";
 import { useState} from 'react';
 import { useRouter } from 'next/navigation';
-import { signin } from "./action";
+import { signin,checkAccountType,redirectToGoogleSignIn } from "./action";
 import ErrorToast from "@/components/features/auth/ErrorTost";
 
 
@@ -19,14 +19,24 @@ export default function LoginPage() {
     async function handleSubmit(formData: FormData) {
       setError(null);
       setLoading(true);
-  
+
       try {
-        await signin({
+        const { isGoogle } = await checkAccountType({
           email: formData.get("email") as string,
           password: formData.get("password") as string,
           remember: formData.get("remember") === "on"
         });
-        router.push("/dashboard")
+ 
+        if (isGoogle) {
+          redirectToGoogleSignIn(); // page navigates away — nothing after this runs
+        } else  {
+          await signin({
+            email: formData.get("email") as string,
+            password: formData.get("password") as string,
+            remember: formData.get("remember") === "on"
+          });
+          router.push("/dashboard")
+        } 
       } catch (err) {
         setError(err instanceof Error ? err.message : "Something went wrong");
       } finally {

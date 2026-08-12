@@ -22,7 +22,28 @@ export interface SignInPayload {
   remember: boolean;
 }
 
+export async function checkAccountType(payload: SignInPayload): Promise<{ isGoogle: boolean }> {
+  const response = await fetch("/api/auth/account-type", {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ message: 'Lookup failed' }));
+    throw new Error(error.message || `Lookup failed with status ${response.status}`);
+  }
+
+  return response.json();
+}
+
+export function redirectToGoogleSignIn(): void {
+  window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/api/auth/google`;
+  // no return value — this function's job is done once the browser starts navigating
+}
+
 export async function signin(payload: SignInPayload): Promise<AuthResponse> {
+
  
   const csrfToken = getCookie('csrf_token');
   
