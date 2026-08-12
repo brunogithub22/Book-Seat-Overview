@@ -18,9 +18,7 @@ export default function HomePage() {
   const [checking, setChecking] = useState(false);
   const [pendingUser, setPendingUser] = useState<AuthUser | null>(null);
 
-  function googleSignIn(){
-    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/api/auth/google/signin`;
-  }
+  
 
   async function handleClick() {
     setChecking(true);
@@ -80,32 +78,7 @@ export default function HomePage() {
               </Button>
             </div>
 
-            <div className="mt-4 flex flex-wrap items-center gap-4">
-              <button
-                onClick={googleSignIn}
-                className="flex items-center gap-3 rounded-sm border border-border bg-surface px-6 py-3 text-ink font-medium text-ink transition-colors hover:border-leather hover:text-leather"
-              >
-                <svg className="h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    fill="#4285F4"
-                    d="M23.49 12.27c0-.79-.07-1.54-.2-2.27H12v4.51h6.47c-.28 1.48-1.13 2.73-2.4 3.58v2.98h3.88c2.27-2.09 3.54-5.17 3.54-8.8z"
-                  />
-                  <path
-                    fill="#34A853"
-                    d="M12 24c3.24 0 5.95-1.07 7.93-2.91l-3.88-2.98c-1.08.72-2.45 1.15-4.05 1.15-3.12 0-5.76-2.1-6.7-4.93H1.29v3.07C3.26 21.3 7.31 24 12 24z"
-                  />
-                  <path
-                    fill="#FBBC05"
-                    d="M5.3 14.33c-.24-.72-.38-1.49-.38-2.28s.14-1.56.38-2.28V6.7H1.29A11.96 11.96 0 000 12.05c0 1.93.46 3.76 1.29 5.35l4.01-3.07z"
-                  />
-                  <path
-                    fill="#EA4335"
-                    d="M12 4.75c1.76 0 3.34.61 4.58 1.8l3.44-3.44C17.94 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.7l4.01 3.07C6.24 6.85 8.88 4.75 12 4.75z"
-                  />
-                </svg>
-                Continue with Google
-              </button>
-            </div>
+            
           </div>
 
           {/* Decorative brand panel */}
