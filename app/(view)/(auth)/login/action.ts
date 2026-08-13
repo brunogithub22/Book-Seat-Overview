@@ -38,7 +38,7 @@ export async function checkAccountType(payload: SignInPayload): Promise<{ isGoog
 }
 
 export function redirectToGoogleSignIn(): void {
-  window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/api/auth/google`;
+  window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/api/auth/google/signin`;
   // no return value — this function's job is done once the browser starts navigating
 }
 
