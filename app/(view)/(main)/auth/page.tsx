@@ -4,12 +4,14 @@ import { Button } from "@/components/ui/form/Button";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import AccountConfirmModal from "@/components/features/auth/AccountConfirm";
+import { AuthResponse } from "../../(auth)/login/action";
+import { useStore } from '@/store/Theme';
 
 
 interface AuthUser {
-  id: string;
+  surname: string;
   email: string;
-  name?: string;
+  name: string;
 }
 
 export default function HomePage() {
@@ -18,14 +20,16 @@ export default function HomePage() {
   const [checking, setChecking] = useState(false);
   const [pendingUser, setPendingUser] = useState<AuthUser | null>(null);
 
-  
+  const setName = useStore((s) => s.setName);
+  const setSurname = useStore((s) => s.setSurname);
+  const setEmail = useStore((s) => s.setEmail);
 
   async function handleClick() {
     setChecking(true);
 
     const res_AccessToken = await fetch("/api/auth/me", { method: "POST", credentials: "include" });
 
-    let user = null;
+    let user: AuthResponse;
 
     if(res_AccessToken.status === 200){
       user = await res_AccessToken.json();
@@ -105,7 +109,12 @@ export default function HomePage() {
       {pendingUser && (
         <AccountConfirmModal
           user={pendingUser}
-          onConfirm={() => router.push("/dashboard")}
+          onConfirm={() =>{
+            setName(pendingUser.name)
+            setSurname(pendingUser.surname)
+            setEmail(pendingUser.email) 
+            router.push("/dashboard")
+          }}
           onSwitchAccount={() => {
             setPendingUser(null);
             router.push("/login");

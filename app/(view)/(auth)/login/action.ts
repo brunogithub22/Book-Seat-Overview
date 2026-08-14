@@ -3,12 +3,9 @@
 import {getCookie} from "@/utils/cookie"
 
 export interface AuthResponse {
-  token: string;
-  user: {
-    id: string;
-    email: string;
-    name: string;
-  };
+  surname: string;
+  email: string;
+  name: string;
 }
 
 export interface AuthCSRFResponse {
@@ -38,7 +35,7 @@ export async function checkAccountType(payload: SignInPayload): Promise<{ isGoog
 }
 
 export function redirectToGoogleSignIn(): void {
-  window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/api/auth/google/signin`;
+  window.location.href = `/api/auth/google/signin`;
   // no return value — this function's job is done once the browser starts navigating
 }
 

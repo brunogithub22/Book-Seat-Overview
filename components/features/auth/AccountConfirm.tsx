@@ -3,9 +3,9 @@
 import { useEffect, useRef } from "react";
 
 interface AuthUser {
-  id: string;
+  surname: string;
   email: string;
-  name?: string;
+  name: string;
 }
 
 interface AccountConfirmModalProps {

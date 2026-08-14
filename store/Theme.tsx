@@ -2,15 +2,16 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { ThemeSlice, sliceTheme } from './slices/Theme';
-import { LangSlice } from './slices/Lang';
+import { AdminSlice, sliceAdmin } from './slices/Admin';
 
 
-export type StoreState = ThemeSlice & LangSlice
+export type StoreState = ThemeSlice & AdminSlice 
 
 export const useStore = create<StoreState>()(
   persist(
     (...a) => ({
       ...sliceTheme(...a),
+      ...sliceAdmin(...a)
     }),
     {
       name: 'Book&Seat',

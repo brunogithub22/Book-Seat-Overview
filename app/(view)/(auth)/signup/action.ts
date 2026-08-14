@@ -1,13 +1,11 @@
 "use client";
 
 export interface AuthResponse {
-  token: string;
-  user: {
-    id: string;
-    email: string;
-    name: string;
-  };
+  surname: string;
+  email: string;
+  name: string;
 }
+
 
 export interface SignUpPayload {
   email: string;

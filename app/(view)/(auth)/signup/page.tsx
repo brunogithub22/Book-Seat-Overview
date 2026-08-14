@@ -5,8 +5,9 @@ import { Field } from "@/components/ui/form/Field";
 import { Button } from "@/components/ui/form/Button";
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { signup } from "./action";
+import { signup, AuthResponse } from "./action";
 import ErrorToast from "@/components/features/auth/ErrorTost";
+import { useStore } from '@/store/Theme';
 
 export default function SignupPage() {
 
@@ -14,19 +15,29 @@ export default function SignupPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const setName = useStore((s) => s.setName);
+  const setSurname = useStore((s) => s.setSurname);
+  const setEmail = useStore((s) => s.setEmail);
+  
+
   async function handleSubmit(formData: FormData) {
     setError(null);
     setLoading(true);
 
     try {
       
-      await signup({
+      const data: AuthResponse = await signup({
         email: formData.get("email") as string,
         password: formData.get("password") as string,
         firstName: formData.get("firstName") as string,
         lastName: formData.get("lastName") as string,
         remember: formData.get("remember") === "on",
       });
+
+      setName(data.name)
+      setSurname(data.surname)
+      setEmail(data.email)
+      
       router.push("/dashboard");
 
     } catch (err) {

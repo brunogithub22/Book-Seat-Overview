@@ -5,14 +5,20 @@ import { Field } from "@/components/ui/form/Field";
 import { Button } from "@/components/ui/form/Button";
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { signin, checkAccountType, redirectToGoogleSignIn } from "./action";
+import { signin, checkAccountType, redirectToGoogleSignIn,AuthResponse } from "./action";
 import ErrorToast from "@/components/features/auth/ErrorTost";
+import { useStore } from '@/store/Theme';
 
 export default function LoginPage() {
 
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  
+  const setName = useStore((s) => s.setName);
+  const setSurname = useStore((s) => s.setSurname);
+  const setEmail = useStore((s) => s.setEmail);
+
 
   async function handleSubmit(formData: FormData) {
     setError(null);
@@ -28,11 +34,14 @@ export default function LoginPage() {
       if (isGoogle) {
         redirectToGoogleSignIn(); // page navigates away — nothing after this runs
       } else {
-        await signin({
+        const data: AuthResponse = await signin({
           email: formData.get("email") as string,
           password: formData.get("password") as string,
           remember: formData.get("remember") === "on"
         });
+        setName(data.name)
+        setSurname(data.surname)
+        setEmail(data.email)
         router.push("/dashboard")
       }
     } catch (err) {

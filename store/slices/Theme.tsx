@@ -12,6 +12,6 @@ export interface ThemeSlice {
 
 export const sliceTheme: StateCreator<ThemeSlice> = (set, get) => ({
     theme: 'light',
-    setTheme: (theme) => set({ theme }),
+    setTheme: (theme) => set({ theme: theme }),
     toggleTheme: () => set({ theme: get().theme === 'dark' ? 'light' : 'dark' }),
 });
