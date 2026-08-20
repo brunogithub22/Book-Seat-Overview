@@ -1,37 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sistema di Autenticazione — Login con Google e con Token
 
-## Getting Started
+Documento di presentazione del progetto: un sistema di autenticazione che
+supporta due modalità di accesso, login tramite Google e login tradizionale
+basato su token, così da dare all'utente più flessibilità nell'accesso.
 
-First, run the development server:
+## Idea del progetto
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+L'obiettivo è costruire un sistema di autenticazione flessibile che permetta
+a un utente di accedere in due modi diversi, mantenendo la stessa gestione
+della sessione una volta effettuato l'accesso:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Login con Google**: l'utente si autentica con il proprio account Google,
+  senza dover creare o ricordare una password dedicata al servizio.
+- **Login senza Google (con token)**: l'utente si registra con email e
+  password sul servizio stesso; dopo il login riceve un token che viene usato
+  per autenticare le richieste successive.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Modalità 1 — Login con Google
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- L'utente clicca su "Accedi con Google".
+- Viene reindirizzato alla pagina di autenticazione di Google.
+- Dopo l'autorizzazione, Google restituisce le informazioni base dell'account
+  (email, nome, immagine profilo).
+- Il sistema crea (o riconosce, se già esistente) l'utente nel proprio
+  database usando l'email come identificatore univoco.
+- Viene creata una sessione per l'utente, senza che debba mai gestire una
+  password sul servizio.
 
-## Learn More
+## Modalità 2 — Login senza Google (con token)
 
-To learn more about Next.js, take a look at the following resources:
+- L'utente si registra fornendo email e password.
+- La password viene salvata in forma sicura (hash), mai in chiaro.
+- Al login, se le credenziali sono corrette, il sistema genera un **token**
+  (es. JWT) che rappresenta la sessione dell'utente.
+- Il token viene inviato al client e usato in ogni richiesta successiva per
+  dimostrare che l'utente è autenticato, senza dover reinserire email e
+  password ogni volta.
+- Il token ha una scadenza, dopo la quale l'utente deve effettuare nuovamente
+  il login.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Punto in comune tra le due modalità
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Indipendentemente dal metodo scelto (Google o token), il risultato finale è
+lo stesso: l'utente ottiene una sessione autenticata riconosciuta dal
+sistema. Questo permette di:
 
-## Deploy on Vercel
+- Proteggere le pagine e le funzionalità riservate agli utenti loggati.
+- Riconoscere sempre l'utente in modo univoco, sia che abbia usato Google sia
+  che abbia usato email e password.
+- Offrire una scelta all'utente su come preferisce accedere, senza duplicare
+  la logica di gestione della sessione.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Obiettivo finale
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# Book-Seat-Overview
+Dare all'utente la libertà di scegliere il metodo di accesso più comodo per
+lui (Google o credenziali proprie), mantenendo un sistema di autenticazione
+unico, sicuro e coerente per tutto il resto del progetto.
+
+## Integrazione con un progetto più grande
+
+Questo sistema di autenticazione non è pensato come progetto isolato: è
+parte di un progetto più ampio, attualmente in fase di lavorazione. L'idea è
+che la gestione degli accessi (login con Google o con token) diventi il
+modulo di autenticazione condiviso da usare all'interno del progetto
+principale, così da:
+
+- Evitare di duplicare la logica di login/registrazione nel progetto più
+  grande.
+- Avere un unico punto di gestione degli utenti e delle sessioni, riutilizzato
+  ovunque serva un accesso autenticato.
+- Poter sviluppare e testare il sistema di autenticazione in autonomia, per
+  poi collegarlo al progetto principale una volta stabile.
